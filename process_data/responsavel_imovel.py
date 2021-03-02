@@ -24,8 +24,9 @@ def __treat_cep(respo):
 
     cep = respo.get_m(['cep_proprietario', 'cep'], None)
 
-    if type(cep) is dict:
-        cep = cep.get('input')
+    #trata para os casos de cep com consultade webservice
+    if 'input' in cep:
+        cep = cep.get_m(['input'])
 
     return cep
 
@@ -41,7 +42,7 @@ def __doc_respo_complex(respo, dados):
         b_resp(
             'tipo_doc',
             'Tipo de documento do responsável pelo imóvel',
-            respo.get_m(doc).get_m(['type'], None))
+            doc.get_m(['type'], None))
     ]
 
     dados.extend(dados_doc)
@@ -84,6 +85,21 @@ def __doc_respo_flat_cnpj(respo, dados):
     dados.extend(dados_doc)
     dados.extend(dados_responsavel_empresa)
 
+def __doc_respo_flat_cpf(respo, dados):
+    dados_doc = [b_resp(
+        'doc',
+        'Número do documento do responsável pelo imóvel',
+        respo.get_m(['cpf_proprietario'])
+    ),
+        b_resp(
+            'tipo_doc',
+            'Tipo de documento do responsável pelo imóvel',
+            'cpf')
+    ]
+
+    dados.extend(dados_doc)
+    dados.extend(dados_responsavel_empresa)
+
 def __treat_doc_respo(respo):
 
     dados = []
@@ -95,6 +111,13 @@ def __treat_doc_respo(respo):
     elif 'cnpj_proprietario' in respo:
 
         __doc_respo_flat_cnpj(respo, dados)
+
+    elif 'cpf_proprietario' in respo:
+
+        __doc_respo_flat_cpf(respo, dados)
+
+    else:
+        raise RuntimeError(f'Resposta não esperada: {respo}')
 
     return dados
 
