@@ -1,10 +1,20 @@
 from pymongo import MongoClient
-from config import conn_string
+from config import conn_str_producao, conn_str_homologacao
 
 
-def gen_db(conn_string=conn_string):
+def gen_db(env = None):
 
-    client = MongoClient(conn_string)
-    db = client['next-producao']
+    aceitos = {'producao' : {'prod', 'producao', 'produção'},
+               'homologacao' : {'homolog', 'homologacao', 'homologação'}}
+
+    if env is None or \
+            env.lower() in aceitos['homologacao']:
+        conn_str = conn_str_homologacao
+        db = MongoClient(conn_str)['next-homologacao-sp']
+    elif env.lower() in aceitos['producao']:
+        conn_str = conn_str_producao
+        db = MongoClient(conn_str)['next-producao']
+    else:
+        raise ValueError(f'Valor {env} nao é válido. Válidos: {aceitos}')
 
     return db
