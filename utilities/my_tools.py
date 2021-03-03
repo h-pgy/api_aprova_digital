@@ -56,6 +56,8 @@ def get_proc_aleatorio():
 
     p = FlexKeyDict(p)
 
+    print(p.get_m(['nP']))
+
     return p
 
 
