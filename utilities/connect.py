@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from config import conn_str_producao, conn_str_homologacao
 
 
-def gen_db(env = None):
+def gen_db(env = 'prod'):
 
     aceitos = {'producao' : {'prod', 'producao', 'produção'},
                'homologacao' : {'homolog', 'homologacao', 'homologação'}}
@@ -15,6 +15,6 @@ def gen_db(env = None):
         conn_str = conn_str_producao
         db = MongoClient(conn_str)['next-producao']
     else:
-        raise ValueError(f'Valor {env} nao é válido. Válidos: {aceitos}')
+        raise ValueError(f'Ambiente {env} nao é válido. Válidos: {aceitos}')
 
     return db
