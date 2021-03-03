@@ -11,9 +11,15 @@ def get_proc_mdata(proc, *args, json_alike = True):
         b_resp('num_protocolo',
                'Número de protocolo no Aprova Digital',
                proc['nP']),
+        b_resp('dt_protocolo',
+               'Data de protocolo',
+               proc['created_at']),
+        b_resp('dt_ultima_atualiz',
+               'Última atualização',
+               proc['updated_at']),
         b_resp('num_proc_sei',
                'Número de processo SEII',
-               proc.get_m(['sei']) \
+               proc.get_m(['sei'])\
                .get_m(['txtCodigoProcedimentoFormatado'], None)),
         b_resp('assunto',
                'Assunto da solicitação',
