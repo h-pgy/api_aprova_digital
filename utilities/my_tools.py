@@ -1,5 +1,6 @@
 import re
 import inspect
+from pprint import pprint
 from .connect import gen_db
 from .proj_exceptions import ProcessoForadoPadrao, ProcessNotFound
 
@@ -35,7 +36,8 @@ class FlexKeyDict(dict):
             if not_found is MyFlag:
                 not_found = FlexKeyDict()
             if verbose:
-                print(f'{keys} not found in {repr(self)}')
+                pprint(f'{keys} not found in :')
+                pprint(f'{self}')
             return not_found
 
 #####################################__Other Tools__#########################################
