@@ -42,3 +42,14 @@ def json_resp(list = False):
             return resp
         return wraped
     return decorator
+
+def encapsulate_response(func):
+
+    @functools.wraps(func)
+    def wraped(*args, **kwargs):
+        try:
+            resp = func(*args, **kwargs)
+            return {'sucess' : True, 'data' : resp}
+        except HTTPException as e:
+            raise e
+    return wraped
