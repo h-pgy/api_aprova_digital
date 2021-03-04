@@ -69,7 +69,7 @@ def regex_check_proc(proc_num, raise_=True):
 
     clean = proc_num.replace('#', '')
     clean = clean.upper().strip()
-    patt = "^(#|\d)( |\d)\d*-\d{2}-SP-\w{3}"
+    patt = "^(#|\d*)( |\d*)*-\d{2}-SP-\w{3}"
 
     match = re.match(patt, clean)
 
