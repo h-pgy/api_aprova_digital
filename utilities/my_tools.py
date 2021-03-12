@@ -93,6 +93,22 @@ def get_proc(proc_num, raise_ = True):
     return FlexKeyDict()
 
 
+def find_estandes(num_alvara):
+
+    db = gen_db()
+
+    nome_estande = 'Alvará de Autorização de Implantação e/ou Utilização de Estande de Vendas'
+    result = list(
+        db.process.find(
+            {'config_metadata.title': nome_estande, 'last_version.nr_alvara.data.response.data.num_protocolo':
+                num_alvara})
+    )
+
+    result = [FlexKeyDict(proc) for proc in result]
+
+    return result
+
+
 def dict_resp(resp):
     parsed = {}
     for item in resp:
