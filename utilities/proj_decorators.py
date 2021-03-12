@@ -84,3 +84,29 @@ def mascara_sql_decor(func):
         return dados
 
     return wraped
+
+def mascara_codlog(codlog):
+    codlog = str(codlog)
+    if '-' not in codlog:
+        codlog = codlog[:-1] + f'-{codlog[-1]}'
+
+    return codlog
+
+def apply_mascara_codlog(dados):
+
+    for terreno in dados:
+        for campo in terreno:
+            if campo['label'] == 'codlog':
+                campo['value'] = mascara_codlog(campo['value'])
+
+def mascara_codlog_decor(func):
+
+    @functools.wraps(func)
+    def wraped(*args, **kwargs):
+
+        dados = func(*args, **kwargs)
+        apply_mascara_codlog(dados)
+
+        return dados
+
+    return wraped

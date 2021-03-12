@@ -1,5 +1,5 @@
 from utilities.my_tools import b_resp, FlexKeyDict
-from utilities.proj_decorators import json_resp, mascara_sql_decor
+from utilities.proj_decorators import json_resp, mascara_sql_decor, mascara_codlog_decor
 from pprint import pprint
 
 def __aux_end_flat(last_version):
@@ -133,6 +133,7 @@ def __dados_terreno_declaratorio(terreno):
 
 @json_resp(list = True)
 @mascara_sql_decor
+@mascara_codlog_decor
 def get_dados_terrenos(proc, *args, json_alike = True):
     '''Gets process-related data'''
 
