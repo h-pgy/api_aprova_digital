@@ -53,3 +53,34 @@ def encapsulate_response(func):
         except HTTPException as e:
             raise e
     return wraped
+
+### mascaras dados
+
+def mascara_sql(sql):
+    sql = str(sql)
+    if '.' not in sql:
+        sql = '.'.join([sql[:3], sql[3:6], sql[6:10]]) + f'-{sql[-1]}'
+
+    return sql
+def apply_mascara_sql(dados):
+
+    for terreno in dados:
+        for i, campo in enumerate(terreno):
+            if campo['label'] == 'tipo_identificacao' and 'sql' in str(campo['value']).lower():
+                campo['value'] = 'SQL' #aproveitando para padronizar para SQL
+                campo_sql = terreno[i+1]
+                assert campo_sql['label'] == 'identificacao_terreno'
+                sql_origi = campo_sql['value']
+                campo_sql['value'] = mascara_sql(sql_origi)
+
+def mascara_sql_decor(func):
+
+    @functools.wraps(func)
+    def wraped(*args, **kwargs):
+
+        dados = func(*args, **kwargs)
+        apply_mascara_sql(dados)
+
+        return dados
+
+    return wraped

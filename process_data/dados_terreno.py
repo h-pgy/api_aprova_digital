@@ -1,5 +1,5 @@
-from utilities.my_tools import b_resp
-from utilities.proj_decorators import json_resp
+from utilities.my_tools import b_resp, FlexKeyDict
+from utilities.proj_decorators import json_resp, mascara_sql_decor
 from pprint import pprint
 
 def __aux_end_flat(last_version):
@@ -95,7 +95,7 @@ def __dados_terreno_declaratorio(terreno):
         aux_endereco = lambda x: ', '.join([
                                 item for item in
                                 [x.get('nome_logradouro'),
-                                 x.get('iptu_numeracao'),
+                                 str(x.get('iptu_numeracao')),
                                  x.get('complemento_imovel'),
                                  x.get('iptu_bairro')]
                                 if item
@@ -132,6 +132,7 @@ def __dados_terreno_declaratorio(terreno):
 
 
 @json_resp(list = True)
+@mascara_sql_decor
 def get_dados_terrenos(proc, *args, json_alike = True):
     '''Gets process-related data'''
 
@@ -164,7 +165,7 @@ def get_dados_terrenos(proc, *args, json_alike = True):
         #MODELO DO PROCESSO DECLARATORIO HIS
         dados = []
         for terreno in last_version['terreno']:
-            dados.append(__dados_terreno_declaratorio(terreno))
+            dados.append(__dados_terreno_declaratorio(FlexKeyDict(terreno)))
         print(proc['config_metadata']['title'])
         return dados
 
