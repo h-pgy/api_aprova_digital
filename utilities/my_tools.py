@@ -111,8 +111,11 @@ def find_estandes(num_alvara):
 
 def dict_resp(resp):
     parsed = {}
-    for item in resp:
-        parsed[item['label']] = item['value']
+    if type(resp) is list:
+        for item in resp:
+            parsed[item['label']] = item['value']
+    else:
+        parsed[resp['label']] = resp['value']
 
     return parsed
 
