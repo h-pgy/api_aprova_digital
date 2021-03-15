@@ -7,8 +7,9 @@ def __aux_end_flat(last_version):
     if 'endereco_obra' in last_version:
         #com hack para nao quebrar caso valor esteja nulo
         dados_end = [
-            last_version['endereco_obra'][0].get('logradouro_rua'),
-                      str(last_version['endereco_obra'][0].get('testada_rua', ''))]
+            last_version.get_m(['endereco_obra'], [{}])[0].get('logradouro_rua'),
+                      str(last_version.get_m(['endereco_obra'],[{}])[0].get('testada_rua'))]
+        dados_end = [item for item in dados_end if item]
 
         return ', '.join(dados_end)
     elif 'logradouro_rua' in last_version:
