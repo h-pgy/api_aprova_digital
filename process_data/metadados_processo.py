@@ -69,6 +69,8 @@ def get_proc_mdata(proc, *args, json_alike = True):
 
     # em alguns casos podemos chamar a chave direto
     # porque tem padrão nos dados
+
+    status = status_processo(proc)
     dados = [
         b_resp('num_protocolo',
                'Número de protocolo no Aprova Digital',
@@ -89,7 +91,22 @@ def get_proc_mdata(proc, *args, json_alike = True):
                ),
         b_resp('status',
                'Situação da solicitação',
-               status_processo(proc))
+               status)
     ]
+
+    if status == 'deferido':
+        docs_publicados = get_docs_published(proc, json_alike=True)
+        for doc in docs_publicados:
+            if doc['tipo_documento'] == 'Despacho deferido':
+                dados.append(b_resp('data_publicacao',
+                                    'Data de publicação no Diário Oficial',
+                                    doc['data_publicacao']))
+    elif status == 'indeferido' or status == 'indeferido e finalizado':
+        docs_publicados = get_docs_published(proc, json_alike=True)
+        for doc in docs_publicados:
+            if doc['tipo_documento'] == 'Despacho indeferido':
+                dados.append(b_resp('data_publicacao',
+                                    'Data de publicação no Diário Oficial',
+                                    doc['data_publicacao']))
 
     return dados
