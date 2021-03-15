@@ -25,6 +25,49 @@ def status_processo(proc):
         print(tipo)
         return 'em analise'
 
+def __aux_public_deferido(dados, proc):
+
+        docs_publicados = get_docs_published(proc, json_alike=True)
+        for doc in docs_publicados:
+            if doc.get('tipo_documento') == 'Despacho deferido':
+                dados.append(b_resp('data_publicacao',
+                                    'Data de publicação no Diário Oficial',
+                                    doc.get('data_publicacao')))
+        #nao publicou ainda
+        else:
+            dados.append(b_resp('data_publicacao',
+                            'Data de publicação no Diário Oficial',
+                            None))
+
+def __aux_public_indeferido(dados, proc):
+
+        docs_publicados = get_docs_published(proc, json_alike=True)
+        for doc in docs_publicados:
+            if doc.get('tipo_documento') == 'Despacho indeferido':
+                dados.append(b_resp('data_publicacao',
+                                    'Data de publicação no Diário Oficial',
+                                    doc.get('data_publicacao')))
+        #nao publicou ainda
+        else:
+            dados.append(b_resp('data_publicacao',
+                                'Data de publicação no Diário Oficial',
+                                None))
+
+def __aux_dt_public(status, dados, proc):
+
+    if status == 'deferido':
+        __aux_public_deferido(dados, proc)
+
+    elif status == 'indeferido' or status == 'indeferido e finalizado':
+        __aux_public_indeferido(dados, proc)
+
+    #nao tem nada para publicar
+    else:
+        dados.append(b_resp('data_publicacao',
+                            'Data de publicação no Diário Oficial',
+                            None))
+
+
 @json_resp(list = True)
 def get_docs_published(proc, *args, json_alike = True):
     '''Gets list of process's published documents'''
@@ -94,19 +137,7 @@ def get_proc_mdata(proc, *args, json_alike = True):
                status)
     ]
 
-    if status == 'deferido':
-        docs_publicados = get_docs_published(proc, json_alike=True)
-        for doc in docs_publicados:
-            if doc['tipo_documento'] == 'Despacho deferido':
-                dados.append(b_resp('data_publicacao',
-                                    'Data de publicação no Diário Oficial',
-                                    doc['data_publicacao']))
-    elif status == 'indeferido' or status == 'indeferido e finalizado':
-        docs_publicados = get_docs_published(proc, json_alike=True)
-        for doc in docs_publicados:
-            if doc['tipo_documento'] == 'Despacho indeferido':
-                dados.append(b_resp('data_publicacao',
-                                    'Data de publicação no Diário Oficial',
-                                    doc['data_publicacao']))
+    #chama funcao auxiliar para devolver data de publicacao
+    __aux_dt_public(status, dados, proc)
 
     return dados
