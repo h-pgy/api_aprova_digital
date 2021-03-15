@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from config import conn_str_producao, conn_str_homologacao
 
 
-def gen_db(env = 'homolog'):
+def gen_db(env = 'prod'):
 
     aceitos = {'producao' : {'prod', 'producao', 'produção'},
                'homologacao' : {'homolog', 'homologacao', 'homologação'}}

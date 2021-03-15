@@ -1,6 +1,7 @@
 import re
 import inspect
 from pprint import pprint
+from datetime import datetime
 from .connect import gen_db
 from .proj_exceptions import ProcessoForadoPadrao, ProcessNotFound
 
@@ -41,6 +42,12 @@ class FlexKeyDict(dict):
             return not_found
 
 #####################################__Other Tools__#########################################
+
+def timestamp_to_txt(timestamp):
+
+    dt_object = datetime.fromtimestamp(int(timestamp) // 1000)
+
+    return dt_object.strftime('%d/%m/%Y')
 
 def b_resp(label, desc, value):
     '''Buils API resp on system specific format'''

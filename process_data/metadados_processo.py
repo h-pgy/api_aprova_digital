@@ -1,4 +1,4 @@
-from utilities.my_tools import b_resp
+from utilities.my_tools import b_resp, timestamp_to_txt
 from utilities.proj_decorators import json_resp
 
 
@@ -28,11 +28,13 @@ def status_processo(proc):
 def __aux_public_deferido(dados, proc):
 
         docs_publicados = get_docs_published(proc, json_alike=True)
+        print(docs_publicados)
         for doc in docs_publicados:
             if doc.get('tipo_documento') == 'Despacho deferido':
                 dados.append(b_resp('data_publicacao',
                                     'Data de publicação no Diário Oficial',
                                     doc.get('data_publicacao')))
+                break
         #nao publicou ainda
         else:
             dados.append(b_resp('data_publicacao',
@@ -47,6 +49,7 @@ def __aux_public_indeferido(dados, proc):
                 dados.append(b_resp('data_publicacao',
                                     'Data de publicação no Diário Oficial',
                                     doc.get('data_publicacao')))
+                break
         #nao publicou ainda
         else:
             dados.append(b_resp('data_publicacao',
@@ -79,7 +82,7 @@ def get_docs_published(proc, *args, json_alike = True):
             b_resp(
                 'data_publicacao',
                 'Data de publicação do documento no Diário Oficial',
-                doc.get('datPublicacao')
+                timestamp_to_txt(doc.get('datPublicacao'))
             ),
             b_resp(
                 'prazo_resposta',
