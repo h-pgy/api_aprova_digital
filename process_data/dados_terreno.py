@@ -6,15 +6,20 @@ def __aux_end_flat(last_version):
 
     if 'endereco_obra' in last_version:
         #com hack para nao quebrar caso valor esteja nulo
-        return last_version.get_m(['endereco_obra'],
-                                  [{"logradouro_rua": None}])[0]["logradouro_rua"]
+        dados_end = [
+            last_version['endereco_obra'][0].get('logradouro_rua'),
+                      str(last_version['endereco_obra'][0].get('testada_rua', ''))]
+
+        return ', '.join(dados_end)
     elif 'logradouro_rua' in last_version:
 
-        return ', '.join([item for item in [
+        dados_end = [
                     last_version.get('logradouro_rua'),
                     last_version.get('numero-predial'),
                     last_version.get('id-bairro')
-                    ] if item])
+                    ]
+
+        return ', '.join([item for item in dados_end if item])
 
 def __dados_terreno_flat(last_version):
     '''Neste modelo há apenas um SQL por solicitacao e os dados
