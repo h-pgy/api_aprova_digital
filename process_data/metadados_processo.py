@@ -25,6 +25,44 @@ def status_processo(proc):
         print(tipo)
         return 'em analise'
 
+@json_resp(list = True)
+def get_docs_published(proc, *args, json_alike = True):
+    '''Gets list of process's published documents'''
+
+    docs = proc.get('sei', {}).get('dispatchedDocuments', [])
+    dados = []
+    for doc in docs:
+        dados_doc = [
+            b_resp(
+                'data_publicacao',
+                'Data de publicação do documento no Diário Oficial',
+                doc.get('datPublicacao')
+            ),
+            b_resp(
+                'prazo_resposta',
+                'Prazo em dias para resposta à publicação (p. ex. resposta Comunique-se)',
+                doc.get('numPrazoComuniquese', None)
+            ),
+            b_resp('tipo_documento',
+                   'Tipo de documento publicado',
+                   doc.get('txtTipoDocumento')),
+            b_resp(
+                'num_id_doc',
+                'Número identificador do documento no SEI',
+                doc.get('numDocumento')
+            )
+        ]
+
+        dados.append(dados_doc)
+    if dados:
+        return dados
+    else:
+        return [b_resp(
+            'no_doc_found',
+            'Nenhum documento foi encontrado',
+            None
+        )]
+
 @json_resp(list = False)
 def get_proc_mdata(proc, *args, json_alike = True):
     '''Gets process-related data'''
