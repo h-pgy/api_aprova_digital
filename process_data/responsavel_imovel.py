@@ -159,15 +159,66 @@ def _dados_um_resp(respo):
 
     return dados
 
+def dados_integracao_estande(proc):
+
+    integracao = proc['last_version']['integracao_respimovel']['data']['response']['data']
+    dados = []
+    for resp in integracao:
+        dados_resp = [
+            b_resp(
+                'nome',
+                'Nome do responsável pelo imóvel',
+                resp['nome']),
+            b_resp(
+                'tipo_vinculo',
+                'Tipo de vínculo do responsável pelo imóvel',
+                resp['tipo_vinculo']),
+            b_resp(
+                'email',
+                'E-mail do responsável pelo imóvel',
+                resp['email']),
+
+            b_resp(
+                'endereco',
+                'Endereço do responsável pelo imóvel',
+                resp['endereco']),
+
+            b_resp('cep',
+                   'CEP do responsável pelo imóvel',
+                   resp['cep']),
+
+            # NÃO CONSEGUI IDENTIFICAR NENHUM PROCESSO COM INFORMAÇÃO DE TELEFONE DO RESP
+            b_resp('telefone',
+                   'Telefone do responsável pelo imóvel',
+                   resp['telefone'])
+        ]
+
+        if 'nome_resp_empresa' in integracao:
+            dados.extend([
+                b_resp('nome_resp_empresa',
+                   'Nome do responsável pela empresa',
+                   resp['nome_resp_empresa']),
+                b_resp('cpf_resp_empresa',
+                       'CPF do responsável pela empresa',
+                       resp['nome_resp_empresa'])])
+        dados.append(dados_resp)
+
+    return dados
+
 @json_resp(list = True)
 def dados_resps_imovel(proc, *args, json_alike = True):
     '''Get's info for all building owners'''
 
-    resps_imovel = proc.get_m(['last_version']) \
-        .get_m(['proprietario'], [])
+    last_version = proc.get_m(['last_version'])
 
-    dados_resps = []
-    for respo in resps_imovel:
-        dados_resps.append(_dados_um_resp(respo))
+    if 'integracao_respimovel' in last_version:
+        dados_resps = dados_integracao_estande(proc)
+
+    else:
+        resps_imovel = last_version.get_m(['proprietario'], [])
+
+        dados_resps = []
+        for respo in resps_imovel:
+            dados_resps.append(_dados_um_resp(respo))
 
     return dados_resps
