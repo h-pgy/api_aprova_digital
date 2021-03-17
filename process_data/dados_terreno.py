@@ -136,6 +136,44 @@ def __dados_terreno_declaratorio(terreno):
 
         return dados_terr
 
+def integracao_estande_vendas(last_version):
+
+    integracao = last_version['integracao_localizacaoimovel']['data']['response']['data']
+
+    dados = []
+
+    for terreno in integracao:
+        dados_terr = [
+            b_resp('tipo_identificacao',
+                   'Tipo de identificação do imóvel - SQL ou Incra',
+                   terreno['tipo_identificacao']),
+            b_resp('identificacao_terreno',
+                   'Código de identificação do terreno (SQL ou INCRA)',
+                   terreno['identificacao_terreno']),
+            b_resp('codlog',
+                   'Código do logradouro em que se situa a fachada do terreno',
+                   terreno['codlog']),
+            b_resp('cep',
+                   'CEP do terreno',
+                   terreno['cep']),
+            b_resp('end_testada_principal',
+                   'Endereço da testada principal',
+                   terreno['end_testada_principal']),
+            b_resp('distrito',
+                   'Distrito em que se situa o imóvel',
+                   terreno['distrito']),
+            b_resp('area_terreno_real',
+                   'Área real do terreno',
+                   terreno['area_terreno_real']),
+            b_resp('area_escritura',
+                   'Área registrada em escritura',
+                   terreno['area_escritura'])
+        ]
+
+        dados.append(dados_terr)
+
+    return dados
+
 
 @json_resp(list = True)
 @mascara_sql_decor
@@ -145,7 +183,12 @@ def get_dados_terrenos(proc, *args, json_alike = True):
 
     last_version = proc.get_m(['last_version'])
 
-    if 'identificacao_terreno' in last_version or 'identificacao_imovel' in last_version:
+    if 'integracao_localizacaoimovel' in last_version:
+
+        dados = integracao_estande_vendas(last_version)
+        return dados
+
+    elif 'identificacao_terreno' in last_version or 'identificacao_imovel' in last_version:
         #MODELO ANTIGO - MAIS SIMPLES
 
         dados = __dados_terreno_flat(last_version)
