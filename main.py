@@ -5,7 +5,7 @@ from utilities.proj_decorators import treat_proc_num_out_of_pattern, treat_proc_
 from process_data.responsavel_imovel import dados_resps_imovel
 from process_data.metadados_processo import get_proc_mdata, get_docs_published
 from process_data.dados_terreno import get_dados_terrenos
-from process_data.estande_de_vendas import dados_estandes_existentes
+from process_data.estande_de_vendas import dados_estandes_existentes, estandes_deferidos
 
 app = FastAPI()
 
@@ -67,7 +67,7 @@ def dados_terrenos(num_proc: Optional[str] = None, json_alike: Optional[bool] = 
 @encapsulate_response
 @treat_proc_not_found
 @treat_proc_num_out_of_pattern
-def dados_estandes(num_proc : Optional[str] = None, json_alike: Optional[bool] = None):
+def documentos_pulic(num_proc : Optional[str] = None, json_alike: Optional[bool] = None):
 
     print(f'***********{num_proc}************')
 
@@ -93,3 +93,17 @@ def dados_estandes(num_proc : str, json_alike: Optional[bool] = None):
         json_alike = True
 
     return dados_estandes_existentes(num_proc, json_alike=json_alike)
+
+
+@app.get('/estandes_deferidos_para_alvara/')
+@encapsulate_response
+@treat_proc_not_found
+@treat_proc_num_out_of_pattern
+def estandes_deferidos_para_alvara(num_proc : str, json_alike: Optional[bool] = None):
+
+    print(f'***********{num_proc}************')
+
+    if json_alike is None:
+        json_alike = True
+
+    return estandes_deferidos(num_proc, json_alike=json_alike)

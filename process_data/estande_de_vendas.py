@@ -26,3 +26,20 @@ def dados_estandes_existentes(num_proc, *args, json_alike = True):
         dados.append(dados_estande)
 
     return dados
+
+@json_resp(list = True)
+def estandes_deferidos(num_proc, *args, json_alike = True):
+
+    estandes = find_estandes(num_proc)
+    dados = []
+    for estande in estandes:
+
+        metadados = get_proc_mdata(estande, json_alike = True)
+
+        if metadados['status'] == 'deferido':
+
+            dados.append(
+                    get_proc_mdata(estande, json_alike = False)
+                   )
+
+    return dados
