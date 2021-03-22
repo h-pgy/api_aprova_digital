@@ -8,7 +8,7 @@ def status_processo(proc):
         'Processo Deferido' : 'deferido',
         'Usuário desistiu da análise do processo' : 'desistencia',
         'Processo Indeferido' : 'indeferido',
-        'Processo Finalizado' : 'finalizado',
+        'Processo Finalizado' : 'deferido',
         'Processo Indeferido e Encerrado' : 'indeferido_encerrado'}
 
     eventos = proc['timeline']
