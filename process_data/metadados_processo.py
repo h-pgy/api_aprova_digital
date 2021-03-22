@@ -3,23 +3,21 @@ from utilities.proj_decorators import json_resp
 
 
 def status_processo(proc):
-    deferimento = 'Processo Deferido'
-    desistencia = 'Usuário desistiu da análise do processo'
-    indeferido = 'Processo Indeferido'
-    finalizado = 'Processo Finalizado'
+
+    status = {
+        'Processo Deferido' : 'deferido',
+        'Usuário desistiu da análise do processo' : 'desistencia',
+        'Processo Indeferido' : 'indeferido',
+        'Processo Finalizado' : 'finalizado',
+        'Processo Indeferido e Encerrado' : 'indeferido_encerrado'}
 
     eventos = proc['timeline']
 
     for ev in eventos:
         tipo = ev['data']['action']
-        if tipo == deferimento:
-            return 'deferido'
-        elif tipo == desistencia:
-            return 'desistencia'
-        elif tipo == finalizado:
-            return 'indeferido e finalizado'
-        elif tipo == indeferido:
-            return 'indeferido'
+        status_tipo = status.get(tipo)
+        if status_tipo:
+            return status_tipo
     # else aqui é do for-else
     else:
         print(tipo)
