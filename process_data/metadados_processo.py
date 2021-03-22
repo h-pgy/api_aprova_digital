@@ -12,7 +12,8 @@ def status_processo(proc):
         'Processo Indeferido e Encerrado' : 'indeferido_encerrado'}
 
     #tem que reverter a lista: por exemplo procs indeferidos e depois deferidos, status eh deferido
-    eventos = proc['timeline'].reverse()
+    eventos = proc['timeline']
+    eventos.reverse()
 
     for ev in eventos:
         tipo = ev['data']['action']
