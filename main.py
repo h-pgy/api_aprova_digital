@@ -6,6 +6,7 @@ from process_data.responsavel_imovel import dados_resps_imovel
 from process_data.metadados_processo import get_proc_mdata, get_docs_published
 from process_data.dados_terreno import get_dados_terrenos
 from process_data.estande_de_vendas import dados_estandes_existentes, estandes_deferidos
+from process_data.apostilamento import apostilamentos_andamento
 
 app = FastAPI()
 
@@ -107,3 +108,16 @@ def estandes_deferidos_para_alvara(num_proc : str, json_alike: Optional[bool] = 
         json_alike = True
 
     return estandes_deferidos(num_proc, json_alike=json_alike)
+
+@app.get('/apostilamentos_em_andamento/')
+@encapsulate_response
+@treat_proc_not_found
+@treat_proc_num_out_of_pattern
+def apostilamentos_andamento_para_alvara(num_proc : str, json_alike: Optional[bool] = None):
+
+    print(f'***********{num_proc}************')
+
+    if json_alike is None:
+        json_alike = True
+
+    return apostilamentos_andamento(num_proc, json_alike=json_alike)

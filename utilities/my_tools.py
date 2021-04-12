@@ -104,11 +104,30 @@ def find_estandes(num_alvara):
 
     db = gen_db()
 
+    num_alvara = regex_check_proc(num_alvara)
+
     nome_estande = 'Alvará de Autorização de Implantação e/ou Utilização de Estande de Vendas'
     result = list(
         db.process.find(
             {'config_metadata.title': nome_estande, 'last_version.nr_alvara.data.response.data.num_protocolo':
                 num_alvara})
+    )
+
+    result = [FlexKeyDict(proc) for proc in result]
+
+    return result
+
+def find_apostilamentos(num_alvara):
+
+    num_alvara = regex_check_proc(num_alvara)
+
+    db = gen_db()
+
+    nome_apostilamento = 'Apostilamento'
+    result = list(
+        db.process.find(
+            {'config_metadata.title': nome_apostilamento, 'last_version.nr_alvara_inicial':
+                {'$regex' : num_alvara}})
     )
 
     result = [FlexKeyDict(proc) for proc in result]
